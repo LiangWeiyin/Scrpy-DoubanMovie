@@ -9,7 +9,7 @@ import string
 class DoubanSpider(scrapy.Spider):
     name = 'douban'
     allowed_domains = ['movie.douban.com']
-    start_urls = ['https://movie.douban.com/j/new_search_subjects?sort=U&range=0,10&tags=%E7%94%B5%E5%BD%B1&start={index}&genres=%E5%89%A7%E6%83%85'.format(index=i) for i in range(9420, 9961, 20)]
+    start_urls = ['https://movie.douban.com/j/new_search_subjects?sort=U&range=0,10&tags=%E7%94%B5%E5%BD%B1&start={index}&genres=%E5%89%A7%E6%83%85'.format(index=i) for i in range(0, 9961, 20)]
 
     def start_requests(self):
         for url in self.start_urls:
@@ -35,8 +35,14 @@ class DoubanSpider(scrapy.Spider):
         year = big_title.find_all(attrs={'class': 'year'})[0].text.strip('()')
 
         temp = soup.find_all(name='div', attrs={'id':'info'})[0].text
-        director = re.findall(r"导演:\s.+", temp)[0][4:].split('/')
-        tags = re.findall(r"类型:\s.+", temp)[0][4:].split('/')
+        try:
+            director = re.findall(r"导演:\s.+", temp)[0][4:].split('/')
+        except:
+            director = None
+        try:
+            tags = re.findall(r"类型:\s.+", temp)[0][4:].split('/')
+        except:
+            tags = None
         try:
             actors = re.findall(r"主演:\s.+", temp)[0][4:].split('/')[:4] #取前四个演员
         except:
@@ -48,17 +54,24 @@ class DoubanSpider(scrapy.Spider):
 
         temp_rating = soup.find_all(name='div', attrs={'class': 'rating_self clearfix', 'typeof': 'v:Rating'})[0].text
         _x = re.findall(r'[0-9|\.]+', temp_rating)
-        rating = _x[0]
-        rating_people = _x[1]
-
-
         try:
-            summary = soup.find_all(name='span', attrs={'class': 'all hidden'})[0].text
-            summary = re.sub(r'[\s]', '', summary)
+            rating = _x[0]
         except:
-            summary = soup.find_all(name='span', attrs={'property': 'v:summary'})[0].text
-            summary = re.sub(r'[\s]', '', summary)
-        
+            rating = None
+        try:
+            rating_people = _x[1]
+        except:
+            rating_people = None
+
+        t1 = soup.find_all(name='span', attrs={'class': 'all hidden'})[0]
+        t2 = soup.find_all(name='span', attrs={'property': 'v:summary'})[0]
+        if (t1):
+            summary = t1.text
+        elif (t2):
+            summary = t2.text
+        else:
+            summary = None
+
         item['title'] = title
         item['year'] = year
         item['director'] = director
