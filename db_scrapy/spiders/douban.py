@@ -9,7 +9,7 @@ import string
 class DoubanSpider(scrapy.Spider):
     name = 'douban'
     allowed_domains = ['movie.douban.com']
-    start_urls = ['https://movie.douban.com/j/new_search_subjects?sort=U&range=0,10&tags=%E7%94%B5%E5%BD%B1&start={index}&genres=%E5%89%A7%E6%83%85'.format(index=i) for i in range(0, 9961, 20)]
+    start_urls = ['https://movie.douban.com/j/new_search_subjects?sort=U&range=0,10&tags=%E7%94%B5%E5%BD%B1&start={index}&genres=%E5%89%A7%E6%83%85'.format(index=i) for i in range(0, 21, 20)]
 
     def start_requests(self):
         for url in self.start_urls:
@@ -37,40 +37,45 @@ class DoubanSpider(scrapy.Spider):
         temp = soup.find_all(name='div', attrs={'id':'info'})[0].text
         try:
             director = re.findall(r"导演:\s.+", temp)[0][4:].split('/')
+            director = ', '.join(director)
         except:
             director = None
         try:
             tags = re.findall(r"类型:\s.+", temp)[0][4:].split('/')
+            tags = ', '.join(tags)
         except:
             tags = None
         try:
             actors = re.findall(r"主演:\s.+", temp)[0][4:].split('/')[:4] #取前四个演员
+            actors = ', '.join(actors)
         except:
             actors = None
         try:
             country = re.findall(r"制片国家/地区:\s.+", temp)[0][9:].split('/')
+            country = ', '.join(country)
         except:
             country = None
 
         temp_rating = soup.find_all(name='div', attrs={'class': 'rating_self clearfix', 'typeof': 'v:Rating'})[0].text
         _x = re.findall(r'[0-9|\.]+', temp_rating)
         try:
-            rating = _x[0]
+            rating = float(_x[0])
         except:
             rating = None
         try:
-            rating_people = _x[1]
+            rating_people = float(_x[1])
         except:
             rating_people = None
 
-        t1 = soup.find_all(name='span', attrs={'class': 'all hidden'})[0]
-        t2 = soup.find_all(name='span', attrs={'property': 'v:summary'})[0]
-        if (t1):
+        try:
+            t1 = soup.find_all(name='span', attrs={'class': 'all hidden'})[0]
             summary = t1.text
-        elif (t2):
-            summary = t2.text
-        else:
-            summary = None
+        except:
+            try:
+                t2 = soup.find_all(name='span', attrs={'property': 'v:summary'})[0]
+                summary = t2.text
+            except:
+                summary = None
 
         item['title'] = title
         item['year'] = year

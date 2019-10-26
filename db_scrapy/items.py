@@ -11,6 +11,8 @@ import scrapy
 class DbScrapyItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
+    table = 'meta'
+
     title = scrapy.Field()
     year = scrapy.Field()
     director = scrapy.Field()
