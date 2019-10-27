@@ -9,6 +9,7 @@ from scrapy import signals
 import random
 import requests
 import logging
+import base64
 
 class DbScrapySpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
@@ -146,7 +147,7 @@ class RandomUserAgentMiddleware():
     def process_request(self, request, spider):
         request.headers['User-Agent'] = random.choice(self.user_agent)
 
-class ProxyMiddleware():
+class Proxy_xdailiMiddleware():
     def __init__(self, proxy_url):
         self.logger = logging.getLogger(__name__)
         self.proxy_url = proxy_url
@@ -175,3 +176,13 @@ class ProxyMiddleware():
                 proxy_url = settings.get('PROXY_URL')
                 )
 
+
+proxyServer = "http://http-pro.abuyun.com:9010"
+proxyUser = "H7LXG048H831742P"
+proxyPass = "2DA4AD30D0BE3725"
+proxyAuth = "Basic " + base64.urlsafe_b64encode(bytes((proxyUser + ":" + proxyPass), "ascii")).decode("utf8")
+class Proxy_abuyunMiddleware():
+    def pecess_request(self, request, spider):
+        request.meta['proxy'] = proxyServer
+
+        request.headers['Proxy-Authorization'] = proxyAuth
