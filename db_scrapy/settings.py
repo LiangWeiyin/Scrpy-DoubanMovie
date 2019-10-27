@@ -54,7 +54,7 @@ DEFAULT_REQUEST_HEADERS = {
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
    'db_scrapy.middlewares.RandomUserAgentMiddleware': 543,
-   'db_scrapy.middlewares.ProxyMiddleware': 544,
+   'db_scrapy.middlewares.Proxy_abuyunMiddleware': 544,
 }
 
 # Enable or disable extensions
