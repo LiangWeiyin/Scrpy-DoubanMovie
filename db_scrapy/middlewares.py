@@ -182,7 +182,9 @@ proxyUser = "H7LXG048H831742P"
 proxyPass = "2DA4AD30D0BE3725"
 proxyAuth = "Basic " + base64.urlsafe_b64encode(bytes((proxyUser + ":" + proxyPass), "ascii")).decode("utf8")
 class Proxy_abuyunMiddleware():
-    def pecess_request(self, request, spider):
+    def process_request(self, request, spider):
+        self.logger = logging.getLogger(__name__)
+        self.logger.debug('使用代理')
         request.meta['proxy'] = proxyServer
 
         request.headers['Proxy-Authorization'] = proxyAuth
