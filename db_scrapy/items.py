@@ -22,3 +22,4 @@ class DbScrapyItem(scrapy.Item):
     rating_people = scrapy.Field()
     country = scrapy.Field()
     summary = scrapy.Field()
+    pic_url = scrapy.Field()

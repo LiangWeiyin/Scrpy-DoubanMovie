@@ -76,6 +76,12 @@ class DoubanSpider(scrapy.Spider):
                 summary = t2.text.strip()
             except:
                 summary = None
+        
+        try:
+            pic_div = str(soup.find_all(name='div', attrs={'id':'mainpic'})[0])
+            pic_url = re.findall(r'src=.+.jpg"', pic_div)[0][5:-1]
+        except:
+            pic_url = None
 
         item['title'] = title
         item['year'] = year
@@ -86,4 +92,6 @@ class DoubanSpider(scrapy.Spider):
         item['rating_people'] = rating_people
         item['country'] = country
         item['summary'] = summary
+        item['pic_url'] = pic_url
+
         yield item
