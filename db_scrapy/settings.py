@@ -54,6 +54,7 @@ DEFAULT_REQUEST_HEADERS = {
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
    'db_scrapy.middlewares.RandomUserAgentMiddleware': 543,
+   'db_scrapy.middlewares.ProxyMiddleware': 544,
 }
 
 # Enable or disable extensions
@@ -93,3 +94,5 @@ MYSQL_DATABASE = 'douban'
 MYSQL_PORT = 3306
 MYSQL_USER = 'noodle'
 MYSQL_PASSWORD = 'Abcd1234*'
+
+PROXY_URL = 'http://localhost:5555/random'
