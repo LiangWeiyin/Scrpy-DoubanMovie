@@ -9,11 +9,7 @@ import string
 class DoubanSpider(scrapy.Spider):
     name = 'douban'
     allowed_domains = ['movie.douban.com']
-<<<<<<< HEAD
-    start_urls = ['https://movie.douban.com/j/new_search_subjects?sort=U&range=0,10&tags=%E7%94%B5%E5%BD%B1&start={index}&genres=%E7%88%B1%E6%83%85'.format(index=i) for i in range(7400, -1, -20)]
-=======
-    start_urls = ['https://movie.douban.com/j/new_search_subjects?sort=U&range=3,8&tags=%E7%94%B5%E5%BD%B1&start={index}&genres=%E5%89%A7%E6%83%85'.format(index=i) for i in range(9960, -1, -20)]
->>>>>>> 9a5ed04ca7bcbc064727a6e6ef6e952c910086f4
+    start_urls = ['https://movie.douban.com/j/new_search_subjects?sort=U&range=0,10&tags=%E7%94%B5%E5%BD%B1&start={index}&genres=%E5%89%A7%E6%83%85'.format(index=i) for i in range(200, 220, 20)]
 
     def start_requests(self):
         for url in self.start_urls:
@@ -73,19 +69,13 @@ class DoubanSpider(scrapy.Spider):
 
         try:
             t1 = soup.find_all(name='span', attrs={'class': 'all hidden'})[0]
-            summary = re.sub(r'[\s]+', '', t1.text)
+            summary = t1.text.strip()
         except:
             try:
                 t2 = soup.find_all(name='span', attrs={'property': 'v:summary'})[0]
-                summary = re.sub(r'[\s]+', '', t2.text)
+                summary = t2.text.strip()
             except:
                 summary = None
-        
-        try:
-            pic_div = str(soup.find_all(name='div', attrs={'id':'mainpic'})[0])
-            pic_url = re.findall(r'src=.+.jpg"', pic_div)[0][5:-1]
-        except:
-            pic_url = None
 
         item['title'] = title
         item['year'] = year
@@ -96,6 +86,4 @@ class DoubanSpider(scrapy.Spider):
         item['rating_people'] = rating_people
         item['country'] = country
         item['summary'] = summary
-        item['pic_url'] = pic_url
-
         yield item

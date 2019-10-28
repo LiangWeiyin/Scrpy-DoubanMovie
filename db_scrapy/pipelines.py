@@ -44,8 +44,11 @@ class MysqlPipeline():
         keys = ', '.join(data.keys())
         values = ', '.join(['%s']*len(data))
         sql = 'INSERT INTO %s (%s) values (%s)' % (item.table, keys, values)
-        self.cursor.execute(sql, tuple(data.values()))
-        self.db.commit()
+        try:
+            self.cursor.execute(sql, tuple(data.values()))
+            self.db.commit()
+        except:
+            self.db.rollback()
         return item
 
 
