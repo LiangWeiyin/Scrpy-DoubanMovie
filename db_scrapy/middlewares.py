@@ -147,44 +147,14 @@ class RandomUserAgentMiddleware():
     def process_request(self, request, spider):
         request.headers['User-Agent'] = random.choice(self.user_agent)
 
-class Proxy_xdailiMiddleware():
-    def __init__(self, proxy_url):
-        self.logger = logging.getLogger(__name__)
-        self.proxy_url = proxy_url
-    
-    def get_random_proxy(self):
-        try:
-            response = requests.get(self.proxy_url)
-            if response.status_code == 200:
-                proxy = response.text
-                return proxy
-        except requests.ConnectionError:
-            return False
-    
-    def process_request(self, request, spider):
-        proxy = self.get_random_proxy()
-        if proxy:
-            uri = 'http://{proxy}'.format(proxy = proxy)
-            self.logger.debug('使用代理' + proxy)
-            request.meta['proxy'] = uri
-
-    
-    @classmethod
-    def from_crawler(cls, crawler):
-        settings = crawler.settings
-        return cls(
-                proxy_url = settings.get('PROXY_URL')
-                )
-
-
 proxyServer = "http://http-pro.abuyun.com:9010"
 proxyUser = "H7LXG048H831742P"
 proxyPass = "2DA4AD30D0BE3725"
 proxyAuth = "Basic " + base64.urlsafe_b64encode(bytes((proxyUser + ":" + proxyPass), "ascii")).decode("utf8")
-class Proxy_abuyunMiddleware():
+class ProxyMiddleware():
     def process_request(self, request, spider):
         self.logger = logging.getLogger(__name__)
-        self.logger.debug('使用代理')
+        self.logger.debug('使用阿布云代理')
         request.meta['proxy'] = proxyServer
 
         request.headers['Proxy-Authorization'] = proxyAuth
