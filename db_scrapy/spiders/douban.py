@@ -9,11 +9,7 @@ import string
 class DoubanSpider(scrapy.Spider):
     name = 'douban'
     allowed_domains = ['movie.douban.com']
-<<<<<<< HEAD
-    start_urls = ['https://movie.douban.com/j/new_search_subjects?sort=U&range=0,10&tags=%E7%94%B5%E5%BD%B1&start={index}&genres=%E7%88%B1%E6%83%85'.format(index=i) for i in range(7400, -1, -20)]
-=======
     start_urls = ['https://movie.douban.com/j/new_search_subjects?sort=U&range=3,8&tags=%E7%94%B5%E5%BD%B1&start={index}&genres=%E5%89%A7%E6%83%85'.format(index=i) for i in range(9960, -1, -20)]
->>>>>>> 9a5ed04ca7bcbc064727a6e6ef6e952c910086f4
 
     def start_requests(self):
         for url in self.start_urls:
